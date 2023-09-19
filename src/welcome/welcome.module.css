@@ -1,0 +1,20 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #103d70ff 10%, #0a4075ff 90%);
+    color: #fff;
+    height: 100vh;
+}
+
+.title {
+    margin-bottom: 16px;
+}
+
+.author {
+    font-size: 1.5rem;
+    display: block;
+    color: #ccc;
+    margin-left: 8px;
+}
