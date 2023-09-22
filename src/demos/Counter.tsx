@@ -1,28 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export function Counter() {
-  const [counter, setCounter] = useState<number>(0);
+  const [counter, setCounter] = useState(0);
+  const [counter2, setCounter2] = useState(0);
 
-  const onClick = () => {
+  const onCount = useCallback(() => {
     setCounter(prev => prev + 1);
-  };
-
-  useEffect(() => {
-    console.log('after mount');
-
-    return () => {
-      console.log('before unmount');
-    };
+    setCounter2(counter2 + 1);
   }, []);
-
-  useEffect(() => {
-    console.log('counter change');
-  }, [counter]);
 
   return (
     <div>
       <p>{counter}</p>
-      <button onClick={onClick}>add</button>
+      <p>{counter2}</p>
+
+      <button onClick={onCount}>add</button>
     </div>
   );
 }
