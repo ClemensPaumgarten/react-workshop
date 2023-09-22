@@ -1,5 +1,7 @@
+import { FunctionComponent } from 'react';
+
 export function List() {
-  const names = ['Peter', 'Jeff', 'Tom'];
+  const names = ['Peter', '', 'Tom'];
 
   return (
     <div>
@@ -10,11 +12,14 @@ export function List() {
   );
 }
 
-function ListItem(props: { name: string }) {
-  return (
+type ListItemProps = {
+  name: string;
+};
+
+const ListItem: FunctionComponent<ListItemProps> = ({ name }) => {
+  return !!name ? (
     <div>
-      <p></p>
-      <p>{props.name}</p>
+      <p>{name}</p>
     </div>
-  );
-}
+  ) : null;
+};

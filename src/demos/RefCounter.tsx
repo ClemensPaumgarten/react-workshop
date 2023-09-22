@@ -1,26 +1,46 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useReducer } from 'react';
+
+type State = {
+  count: number;
+};
+
+type Action = {
+  type: 'add' | 'subtract';
+};
+
+function reducer(state: State, action: Action) {
+  switch (action.type) {
+    case 'add':
+      return {
+        count: state.count + 1,
+      };
+    case 'subtract':
+      return {
+        count: state.count - 1,
+      };
+    default:
+      return state;
+  }
+}
 
 export function RefCounter() {
-  const [counter, setCounter] = useState(0);
-  const refCounter = useRef(0);
+  const [state, dispatch] = useReducer(reducer, {
+    count: 0,
+  });
 
   const onCount = useCallback(() => {
-    setCounter(prev => prev + 1);
-  }, [setCounter]);
+    dispatch({ type: 'add' });
+  }, []);
 
-  const onRefCount = useCallback(() => {
-    setCounter(prev => prev + 1);
-  }, [setCounter]);
+  const onSubtract = useCallback(() => {
+    dispatch({ type: 'subtract' });
+  }, []);
 
   return (
     <div>
-      <p>Counter value: {counter}</p>
-
+      <p>{state.count}</p>
       <button onClick={onCount}>add</button>
-
-      <p>Ref value: {refCounter.current}</p>
-
-      <button onClick={onRefCount}>add ref</button>
+      <button onClick={onSubtract}>subtract</button>
     </div>
   );
 }
