@@ -20,42 +20,24 @@ import { ImageList } from './ImageList.tsx';
 import { getImages } from './api.ts';
 import { Image } from './image.ts';
 import { Searchbar } from './Searchbar.tsx';
+import { useImageContext } from './ImageProvider.tsx';
 
 export const MainPage: FunctionComponent = () => {
-  const [images, setImages] = useState<Image[]>([]);
+  const {
+    state: { images, imageDetail },
+    dispatch,
+  } = useImageContext();
 
   const [filteredImages, setFilteredImages] = useState<Image[]>([]);
   const [showLikes, setShowLikes] = useState(false);
   const [searchInput, setSearchInput] = useState('');
-  const [imageDetail, setImageDetail] = useState<Image | null>(null);
 
   /**
    * Rather use useMemo here because you never modify the favourites itself.
    */
-  const favourites = useMemo(
-    () => (searchInput ? filteredImages : images).filter(image => image.liked),
-    [images, filteredImages, searchInput],
-  );
-
-  const addToFavourites = useCallback(
-    (image: Image) => {
-      setImages(prevState => {
-        const copyState = [...prevState];
-        const index = prevState.findIndex(i => i.id === image.id);
-
-        if (index > -1) {
-          const current = copyState[index];
-          copyState[index] = {
-            ...current,
-            liked: !current.liked,
-          };
-        }
-
-        return copyState;
-      });
-    },
-    [setImages],
-  );
+  const favourites = useMemo(() => {
+    return (searchInput ? filteredImages : images).filter(image => image.liked);
+  }, [images, filteredImages, searchInput]);
 
   const toggleShowLikes = useCallback(() => {
     setShowLikes(prev => !prev);
@@ -69,19 +51,22 @@ export const MainPage: FunctionComponent = () => {
     [setSearchInput],
   );
 
-  const onDetailsClick = useCallback(
-    (image: Image) => {
-      setImageDetail(image);
-    },
-    [setImageDetail],
-  );
+  const onDetailsCloseClick = useCallback(() => {
+    dispatch({
+      type: 'setDetail',
+      payload: null,
+    });
+  }, [dispatch]);
 
   useEffect(() => {
     const fetchImages = async () => {
       const [images, error] = await getImages();
 
       if (!error) {
-        setImages(images);
+        dispatch({
+          type: 'setImages',
+          payload: images,
+        });
       }
     };
 
@@ -131,8 +116,7 @@ export const MainPage: FunctionComponent = () => {
         }}
       >
         <ImageList
-          toggleLike={addToFavourites}
-          onDetailsClick={onDetailsClick}
+          onDetailsClick={() => void 0}
           images={
             showLikes
               ? favourites
@@ -143,11 +127,7 @@ export const MainPage: FunctionComponent = () => {
         />
       </Container>
 
-      <Drawer
-        anchor="right"
-        open={!!imageDetail}
-        onClose={() => setImageDetail(null)}
-      >
+      <Drawer onClose={onDetailsCloseClick} anchor="right" open={!!imageDetail}>
         <Paper
           sx={{
             p: 2,
@@ -185,7 +165,7 @@ export const MainPage: FunctionComponent = () => {
               p: 1,
             }}
           >
-            <Button onClick={() => setImageDetail(null)}>Schließen</Button>
+            <Button onClick={onDetailsCloseClick}>Schließen</Button>
           </Box>
         </Paper>
       </Drawer>

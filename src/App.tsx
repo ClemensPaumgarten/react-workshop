@@ -5,9 +5,14 @@ import './App.css';
 // import { RefCounter } from './demos/RefCounter.tsx';
 // import { List } from './demos/List.tsx';
 import { MainPage } from './challenge/MainPage.tsx';
+import { ImageContextProvider } from './challenge/ImageProvider.tsx';
 
 function App() {
-  return <MainPage />;
+  return (
+    <ImageContextProvider>
+      <MainPage />
+    </ImageContextProvider>
+  );
 }
 
 export default App;

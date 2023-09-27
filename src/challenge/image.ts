@@ -10,3 +10,13 @@ export type ImageDTO = {
 export type Image = {
   liked: boolean;
 } & ImageDTO;
+
+export const createDummyImage = (index: number): Image => ({
+  id: index.toString(),
+  author: index.toString(),
+  width: 200,
+  height: 200,
+  url: 'test_image',
+  download_url: 'test_image',
+  liked: false,
+});

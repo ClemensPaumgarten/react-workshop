@@ -11,25 +11,29 @@ import {
 } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Image } from './image.ts';
+import { useImageContext } from './ImageProvider.tsx';
 
 type ImageCardProps = {
   image: Image;
-  onToggleLike: (image: Image) => void;
   onDetailsClick: (image: Image) => void;
 };
 
-export const ImageCard: FunctionComponent<ImageCardProps> = ({
-  onToggleLike,
-  image,
-  onDetailsClick,
-}) => {
-  const onClickFavourite = useCallback(() => {
-    onToggleLike(image);
-  }, [image, onToggleLike]);
+export const ImageCard: FunctionComponent<ImageCardProps> = ({ image }) => {
+  const { dispatch } = useImageContext();
 
-  const onButtonClick = useCallback(() => {
-    onDetailsClick(image);
-  }, [image, onDetailsClick]);
+  const onLikeClick = useCallback(() => {
+    dispatch({
+      type: image.liked ? 'unsetLike' : 'setLike',
+      payload: image,
+    });
+  }, [image, dispatch]);
+
+  const onDetailsClick = useCallback(() => {
+    dispatch({
+      type: 'setDetail',
+      payload: image,
+    });
+  }, [image, dispatch]);
 
   return (
     <Card sx={{ maxWidth: 345 }}>
@@ -41,11 +45,11 @@ export const ImageCard: FunctionComponent<ImageCardProps> = ({
       </CardContent>
       <CardActions disableSpacing>
         <Stack direction="row" spacing={2}>
-          <IconButton onClick={onClickFavourite} aria-label="add to favorites">
+          <IconButton onClick={onLikeClick} aria-label="add to favorites">
             <FavoriteIcon color={image.liked ? 'error' : 'inherit'} />
           </IconButton>
 
-          <Button onClick={onButtonClick}>Details</Button>
+          <Button onClick={onDetailsClick}>Details</Button>
         </Stack>
       </CardActions>
     </Card>
