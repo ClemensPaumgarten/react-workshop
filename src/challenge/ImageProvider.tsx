@@ -1,4 +1,3 @@
-import { Image } from './image.ts';
 import {
   createContext,
   Dispatch,
@@ -8,16 +7,18 @@ import {
   useReducer,
 } from 'react';
 
-type ImageState = {
-  images: Image[];
+import { Image } from './image.ts';
+
+export type ImageState = {
   imageDetail: Image | null;
-  onLikeImage: () => void;
+  images: Image[];
+  showLikes: boolean;
 };
 
-const defaultState: ImageState = {
+export const defaultState: ImageState = {
   images: [],
   imageDetail: null,
-  onLikeImage: () => void 0,
+  showLikes: false,
 };
 
 type Action =
@@ -36,19 +37,15 @@ type Action =
   | {
       type: 'unsetLike';
       payload: Image;
+    }
+  | {
+      type: 'showLikes';
+    }
+  | {
+      type: 'hideLikes';
     };
 
-type ImageContextType = {
-  state: ImageState;
-  dispatch: Dispatch<Action>;
-};
-
-const ImageContext = createContext<ImageContextType>({
-  state: defaultState,
-  dispatch: () => void 0,
-});
-
-const reducer = (state: ImageState, action: Action): ImageState => {
+export const reducer = (state: ImageState, action: Action): ImageState => {
   switch (action.type) {
     case 'setImages':
       return {
@@ -103,10 +100,30 @@ const reducer = (state: ImageState, action: Action): ImageState => {
 
       return copyState;
     }
+    case 'showLikes':
+      return {
+        ...state,
+        showLikes: true,
+      };
+    case 'hideLikes':
+      return {
+        ...state,
+        showLikes: false,
+      };
     default:
       return state;
   }
 };
+
+type ImageContextType = {
+  state: ImageState;
+  dispatch: Dispatch<Action>;
+};
+
+const ImageContext = createContext<ImageContextType>({
+  state: defaultState,
+  dispatch: () => void 0,
+});
 
 export const ImageContextProvider: FunctionComponent<PropsWithChildren> = ({
   children,

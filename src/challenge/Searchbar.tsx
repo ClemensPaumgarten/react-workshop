@@ -1,19 +1,27 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useCallback } from 'react';
 import { Button, Paper, Stack, TextField, TextFieldProps } from '@mui/material';
+import { useImageContext } from './ImageProvider.tsx';
 
 type SearchbarProps = {
   searchInput: string;
   onSearchInputChange: TextFieldProps['onChange'];
-  toggleShowLikes: () => void;
-  showLikes: boolean;
 };
 
 export const Searchbar: FunctionComponent<SearchbarProps> = ({
   searchInput,
   onSearchInputChange,
-  toggleShowLikes,
-  showLikes,
 }) => {
+  const {
+    state: { showLikes },
+    dispatch,
+  } = useImageContext();
+
+  const toggleImageList = useCallback(() => {
+    dispatch({
+      type: showLikes ? 'hideLikes' : 'showLikes',
+    });
+  }, [showLikes]);
+
   return (
     <Paper
       sx={{
@@ -41,7 +49,7 @@ export const Searchbar: FunctionComponent<SearchbarProps> = ({
           fullWidth
         />
 
-        <Button variant="outlined" onClick={toggleShowLikes}>
+        <Button variant="outlined" onClick={toggleImageList}>
           {showLikes ? 'Alle anzeigen' : 'Likes anzeigen'}
         </Button>
       </Stack>

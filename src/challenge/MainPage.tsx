@@ -18,19 +18,28 @@ import {
 } from 'react';
 import { ImageList } from './ImageList.tsx';
 import { getImages } from './api.ts';
-import { Image } from './image.ts';
 import { Searchbar } from './Searchbar.tsx';
 import { useImageContext } from './ImageProvider.tsx';
 
 export const MainPage: FunctionComponent = () => {
   const {
-    state: { images, imageDetail },
+    state: { images, imageDetail, showLikes },
     dispatch,
   } = useImageContext();
 
-  const [filteredImages, setFilteredImages] = useState<Image[]>([]);
-  const [showLikes, setShowLikes] = useState(false);
   const [searchInput, setSearchInput] = useState('');
+
+  const filteredImages = useMemo(() => {
+    if (searchInput.length) {
+      return images.filter(image =>
+        image.author
+          .toLocaleLowerCase()
+          .includes(searchInput.toLocaleLowerCase()),
+      );
+    } else {
+      return [];
+    }
+  }, [searchInput, images]);
 
   /**
    * Rather use useMemo here because you never modify the favourites itself.
@@ -38,10 +47,6 @@ export const MainPage: FunctionComponent = () => {
   const favourites = useMemo(() => {
     return (searchInput ? filteredImages : images).filter(image => image.liked);
   }, [images, filteredImages, searchInput]);
-
-  const toggleShowLikes = useCallback(() => {
-    setShowLikes(prev => !prev);
-  }, [setShowLikes]);
 
   const onSearchInputChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -73,20 +78,6 @@ export const MainPage: FunctionComponent = () => {
     fetchImages();
   }, []);
 
-  useEffect(() => {
-    if (searchInput.length) {
-      setFilteredImages(() => {
-        return images.filter(image =>
-          image.author
-            .toLocaleLowerCase()
-            .includes(searchInput.toLocaleLowerCase()),
-        );
-      });
-    } else {
-      setFilteredImages([]);
-    }
-  }, [searchInput, setFilteredImages, images]);
-
   return (
     <FlexContainerFullHeight>
       <Box
@@ -103,8 +94,6 @@ export const MainPage: FunctionComponent = () => {
           <Searchbar
             searchInput={searchInput}
             onSearchInputChange={onSearchInputChange}
-            showLikes={showLikes}
-            toggleShowLikes={toggleShowLikes}
           />
         </Container>
       </Box>
