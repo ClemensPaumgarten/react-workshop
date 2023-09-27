@@ -5,18 +5,14 @@ import { Image } from './image.ts';
 
 type ImageListProps = {
   images: Image[];
-  onDetailsClick: (image: Image) => void;
 };
 
-export const ImageList: FunctionComponent<ImageListProps> = ({
-  images,
-  onDetailsClick,
-}) => {
+export const ImageList: FunctionComponent<ImageListProps> = ({ images }) => {
   return (
     <Grid container spacing={3}>
       {images.map(image => (
         <Grid md={4} key={image.id} item>
-          <ImageCard onDetailsClick={onDetailsClick} image={image} />
+          <ImageCard image={image} />
         </Grid>
       ))}
     </Grid>

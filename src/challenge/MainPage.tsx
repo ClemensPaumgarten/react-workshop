@@ -116,7 +116,6 @@ export const MainPage: FunctionComponent = () => {
         }}
       >
         <ImageList
-          onDetailsClick={() => void 0}
           images={
             showLikes
               ? favourites

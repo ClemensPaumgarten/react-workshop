@@ -15,7 +15,6 @@ import { useImageContext } from './ImageProvider.tsx';
 
 type ImageCardProps = {
   image: Image;
-  onDetailsClick: (image: Image) => void;
 };
 
 export const ImageCard: FunctionComponent<ImageCardProps> = ({ image }) => {
