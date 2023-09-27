@@ -14,52 +14,47 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useReducer,
   useState,
 } from 'react';
 import { ImageList } from './ImageList.tsx';
 import { getImages } from './api.ts';
 import { Image } from './image.ts';
 import { Searchbar } from './Searchbar.tsx';
+import { defaultState, reducer } from './reducer.ts';
 
 export const MainPage: FunctionComponent = () => {
-  const [images, setImages] = useState<Image[]>([]);
+  const [{ images, imageDetail, showLikes }, dispatch] = useReducer(
+    reducer,
+    defaultState,
+  );
 
-  const [filteredImages, setFilteredImages] = useState<Image[]>([]);
-  const [showLikes, setShowLikes] = useState(false);
   const [searchInput, setSearchInput] = useState('');
-  const [imageDetail, setImageDetail] = useState<Image | null>(null);
+
+  const filteredImages = useMemo(() => {
+    if (searchInput.length) {
+      return images.filter(image =>
+        image.author
+          .toLocaleLowerCase()
+          .includes(searchInput.toLocaleLowerCase()),
+      );
+    } else {
+      return [];
+    }
+  }, [images, searchInput]);
 
   /**
    * Rather use useMemo here because you never modify the favourites itself.
    */
-  const favourites = useMemo(
-    () => (searchInput ? filteredImages : images).filter(image => image.liked),
-    [images, filteredImages, searchInput],
-  );
-
-  const addToFavourites = useCallback(
-    (image: Image) => {
-      setImages(prevState => {
-        const copyState = [...prevState];
-        const index = prevState.findIndex(i => i.id === image.id);
-
-        if (index > -1) {
-          const current = copyState[index];
-          copyState[index] = {
-            ...current,
-            liked: !current.liked,
-          };
-        }
-
-        return copyState;
-      });
-    },
-    [setImages],
-  );
+  const favourites = useMemo(() => {
+    return (searchInput ? filteredImages : images).filter(image => image.liked);
+  }, [images, filteredImages, searchInput]);
 
   const toggleShowLikes = useCallback(() => {
-    setShowLikes(prev => !prev);
-  }, [setShowLikes]);
+    dispatch({
+      type: showLikes ? 'hideLikes' : 'showLikes',
+    });
+  }, [showLikes]);
 
   const onSearchInputChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -71,36 +66,45 @@ export const MainPage: FunctionComponent = () => {
 
   const onDetailsClick = useCallback(
     (image: Image) => {
-      setImageDetail(image);
+      dispatch({
+        type: 'setDetail',
+        payload: image,
+      });
     },
-    [setImageDetail],
+    [dispatch],
   );
+
+  const onFavouritesClick = useCallback(
+    (image: Image) => {
+      dispatch({
+        type: image.liked ? 'unsetLike' : 'setLike',
+        payload: image,
+      });
+    },
+    [dispatch],
+  );
+
+  const onDetailsCloseClick = useCallback(() => {
+    dispatch({
+      type: 'setDetail',
+      payload: null,
+    });
+  }, [dispatch]);
 
   useEffect(() => {
     const fetchImages = async () => {
       const [images, error] = await getImages();
 
       if (!error) {
-        setImages(images);
+        dispatch({
+          type: 'setImages',
+          payload: images,
+        });
       }
     };
 
     fetchImages();
   }, []);
-
-  useEffect(() => {
-    if (searchInput.length) {
-      setFilteredImages(() => {
-        return images.filter(image =>
-          image.author
-            .toLocaleLowerCase()
-            .includes(searchInput.toLocaleLowerCase()),
-        );
-      });
-    } else {
-      setFilteredImages([]);
-    }
-  }, [searchInput, setFilteredImages, images]);
 
   return (
     <FlexContainerFullHeight>
@@ -131,7 +135,7 @@ export const MainPage: FunctionComponent = () => {
         }}
       >
         <ImageList
-          toggleLike={addToFavourites}
+          toggleLike={onFavouritesClick}
           onDetailsClick={onDetailsClick}
           images={
             showLikes
@@ -143,11 +147,7 @@ export const MainPage: FunctionComponent = () => {
         />
       </Container>
 
-      <Drawer
-        anchor="right"
-        open={!!imageDetail}
-        onClose={() => setImageDetail(null)}
-      >
+      <Drawer onClose={onDetailsCloseClick} anchor="right" open={!!imageDetail}>
         <Paper
           sx={{
             p: 2,
@@ -185,7 +185,7 @@ export const MainPage: FunctionComponent = () => {
               p: 1,
             }}
           >
-            <Button onClick={() => setImageDetail(null)}>Schließen</Button>
+            <Button onClick={onDetailsCloseClick}>Schließen</Button>
           </Box>
         </Paper>
       </Drawer>
