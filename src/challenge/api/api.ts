@@ -1,4 +1,4 @@
-import { Image, ImageDTO } from './image.ts';
+import { Image, ImageDTO } from '../models/image.ts';
 
 const baseUrl = 'https://picsum.photos/v2';
 

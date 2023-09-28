@@ -10,8 +10,8 @@ import {
   Typography,
 } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { Image } from './image.ts';
-import { useImageContext } from './ImageProvider.tsx';
+import { Image } from '../../models/image.ts';
+import { useImageContext } from '../../context/ImageProvider.tsx';
 
 type ImageCardProps = {
   image: Image;

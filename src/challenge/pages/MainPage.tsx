@@ -15,9 +15,9 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { ImageList } from './ImageList.tsx';
-import { Searchbar } from './Searchbar.tsx';
-import { useImageContext } from './ImageProvider.tsx';
+import { ImageList } from '../components/ImageList/ImageList.tsx';
+import { Searchbar } from '../components/Searchbar/Searchbar.tsx';
+import { useImageContext } from '../context/ImageProvider.tsx';
 
 export const MainPage: FunctionComponent = () => {
   const {

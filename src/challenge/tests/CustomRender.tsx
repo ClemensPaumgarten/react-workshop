@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
-import { ImageContextProvider } from '../ImageProvider.tsx';
+import { ImageContextProvider } from '../context/ImageProvider.tsx';
 
 const WithProviders = ({ children }: { children: React.ReactNode }) => {
   return <ImageContextProvider>{children}</ImageContextProvider>;

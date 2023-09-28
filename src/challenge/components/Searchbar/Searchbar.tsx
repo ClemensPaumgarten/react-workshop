@@ -1,6 +1,6 @@
 import { FunctionComponent, useCallback } from 'react';
 import { Button, Paper, Stack, TextField, TextFieldProps } from '@mui/material';
-import { useImageContext } from './ImageProvider.tsx';
+import { useImageContext } from '../../context/ImageProvider.tsx';
 
 type SearchbarProps = {
   searchInput: string;

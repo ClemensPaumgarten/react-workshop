@@ -1,10 +1,10 @@
 import '@testing-library/jest-dom';
 import { ImageCard } from './ImageCard.tsx';
-import { render, screen } from './tests/CustomRender.tsx';
+import { render, screen } from '../../tests/CustomRender.tsx';
 import { fireEvent } from '@testing-library/react';
-import { Image } from './image.ts';
-import { ImageContextProvider } from './ImageProvider.tsx';
-import { MainPage } from './MainPage.tsx';
+import { Image } from '../../models/image.ts';
+import { ImageContextProvider } from '../../context/ImageProvider.tsx';
+import { MainPage } from '../../pages/MainPage.tsx';
 
 const mockImage: Image = {
   id: '1',

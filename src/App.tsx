@@ -1,14 +1,10 @@
-import './App.css';
-// import { MainPage } from './challenge/MainPage.tsx';
-// import { Counter } from './demos/Counter.tsx';
-// import { todos, Todos } from './demos/Todos.tsx';
-// import { RefCounter } from './demos/RefCounter.tsx';
-// import { List } from './demos/List.tsx';
-import { MainPage } from './challenge/MainPage.tsx';
-import { ImageContextProvider } from './challenge/ImageProvider.tsx';
+import { MainPage } from './challenge/pages/MainPage.tsx';
+import { ImageContextProvider } from './challenge/context/ImageProvider.tsx';
 import { useEffect, useState } from 'react';
-import { getImages } from './challenge/api.ts';
-import { Image } from './challenge/image.ts';
+import { getImages } from './challenge/api/api.ts';
+import { Image } from './challenge/models/image.ts';
+
+import './App.css';
 
 function App() {
   const [images, setImages] = useState<Image[]>([]);

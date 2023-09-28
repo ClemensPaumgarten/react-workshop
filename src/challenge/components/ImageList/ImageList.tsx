@@ -1,8 +1,8 @@
 import { FunctionComponent, useCallback } from 'react';
 import { Grid } from '@mui/material';
-import { ImageCard } from './ImageCard.tsx';
-import { Image } from './image.ts';
-import { useImageContext } from './ImageProvider.tsx';
+import { ImageCard } from '../ImageCard/ImageCard.tsx';
+import { Image } from '../../models/image.ts';
+import { useImageContext } from '../../context/ImageProvider.tsx';
 
 type ImageListProps = {
   images: Image[];

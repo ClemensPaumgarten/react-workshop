@@ -8,7 +8,7 @@ import {
   useReducer,
 } from 'react';
 
-import { Image } from './image.ts';
+import { Image } from '../models/image.ts';
 
 export type ImageState = {
   imageDetail: Image | null;
