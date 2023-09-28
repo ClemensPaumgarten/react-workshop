@@ -9,25 +9,28 @@ import { ImageContextProvider } from './challenge/ImageProvider.tsx';
 import { useEffect, useState } from 'react';
 import { getImages } from './challenge/api.ts';
 import { Image } from './challenge/image.ts';
+import { ErrorBoundary } from './challenge/ErrorBoundary.tsx';
 
 function App() {
   const [images, setImages] = useState<Image[]>([]);
   useEffect(() => {
     const fetchImages = async () => {
-      const [images, error] = await getImages();
+      const [images] = await getImages();
 
-      if (!error) {
-        setImages(images);
-      }
+      void images;
+
+      setImages(null);
     };
 
     fetchImages();
   }, []);
 
   return (
-    <ImageContextProvider images={images}>
-      <MainPage />
-    </ImageContextProvider>
+    <ErrorBoundary fallback={<div>Something went wrong</div>}>
+      <ImageContextProvider images={images}>
+        <MainPage />
+      </ImageContextProvider>
+    </ErrorBoundary>
   );
 }
 

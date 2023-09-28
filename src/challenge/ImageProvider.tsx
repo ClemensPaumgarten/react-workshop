@@ -96,7 +96,7 @@ export const ImageContextProvider: FunctionComponent<
 > = ({ children, images }) => {
   const [state, dispatch] = useReducer(reducer, {
     ...defaultState,
-    images: images || [],
+    images: images,
   } as ImageState);
 
   useEffect(() => {
