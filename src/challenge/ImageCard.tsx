@@ -11,31 +11,25 @@ import {
 } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Image } from './image.ts';
-import { useImageContext } from './ImageProvider.tsx';
 
 type ImageCardProps = {
   image: Image;
+  onImageLikeClick: (image: Image) => void;
+  onDetailsClick: (image: Image) => void;
 };
 
-export const ImageCard: FunctionComponent<ImageCardProps> = ({ image }) => {
-  const { dispatch } = useImageContext();
-
+export const ImageCard: FunctionComponent<ImageCardProps> = ({
+  image,
+  onImageLikeClick,
+  onDetailsClick,
+}) => {
   const onLikeClick = useCallback(() => {
-    dispatch({
-      type: 'setLike',
-      payload: {
-        ...image,
-        liked: !image.liked,
-      },
-    });
-  }, [image, dispatch]);
+    onImageLikeClick(image);
+  }, [image]);
 
-  const onDetailsClick = useCallback(() => {
-    dispatch({
-      type: 'setDetail',
-      payload: image,
-    });
-  }, [image, dispatch]);
+  const onDetailsButtonClick = useCallback(() => {
+    onDetailsClick(image);
+  }, [image]);
 
   return (
     <Card sx={{ maxWidth: 345 }}>
@@ -51,7 +45,7 @@ export const ImageCard: FunctionComponent<ImageCardProps> = ({ image }) => {
             <FavoriteIcon color={image.liked ? 'error' : 'inherit'} />
           </IconButton>
 
-          <Button onClick={onDetailsClick}>Details</Button>
+          <Button onClick={onDetailsButtonClick}>Details</Button>
         </Stack>
       </CardActions>
     </Card>
