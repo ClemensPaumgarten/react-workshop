@@ -18,7 +18,8 @@ export const Searchbar: FunctionComponent<SearchbarProps> = ({
 
   const toggleImageList = useCallback(() => {
     dispatch({
-      type: showLikes ? 'hideLikes' : 'showLikes',
+      type: 'setShowLike',
+      payload: !showLikes,
     });
   }, [showLikes]);
 

@@ -4,6 +4,7 @@ import {
   FunctionComponent,
   PropsWithChildren,
   useContext,
+  useEffect,
   useReducer,
 } from 'react';
 
@@ -90,10 +91,20 @@ const ImageContext = createContext<ImageContextType>({
   dispatch: () => void 0,
 });
 
-export const ImageContextProvider: FunctionComponent<PropsWithChildren> = ({
-  children,
-}) => {
-  const [state, dispatch] = useReducer(reducer, defaultState);
+export const ImageContextProvider: FunctionComponent<
+  PropsWithChildren<{ images?: Image[] }>
+> = ({ children, images }) => {
+  const [state, dispatch] = useReducer(reducer, {
+    ...defaultState,
+    images: images || [],
+  } as ImageState);
+
+  useEffect(() => {
+    dispatch({
+      type: 'setImages',
+      payload: images || [],
+    });
+  }, [images]);
 
   return (
     <ImageContext.Provider

@@ -12,12 +12,10 @@ import {
   FunctionComponent,
   PropsWithChildren,
   useCallback,
-  useEffect,
   useMemo,
   useState,
 } from 'react';
 import { ImageList } from './ImageList.tsx';
-import { getImages } from './api.ts';
 import { Searchbar } from './Searchbar.tsx';
 import { useImageContext } from './ImageProvider.tsx';
 
@@ -62,21 +60,6 @@ export const MainPage: FunctionComponent = () => {
       payload: null,
     });
   }, [dispatch]);
-
-  useEffect(() => {
-    const fetchImages = async () => {
-      const [images, error] = await getImages();
-
-      if (!error) {
-        dispatch({
-          type: 'setImages',
-          payload: images,
-        });
-      }
-    };
-
-    fetchImages();
-  }, []);
 
   return (
     <FlexContainerFullHeight>
@@ -135,7 +118,7 @@ export const MainPage: FunctionComponent = () => {
               src={imageDetail?.download_url}
             />
 
-            <Typography color="text.secondary">
+            <Typography data-testId="drawer-author" color="text.secondary">
               {imageDetail?.author}
             </Typography>
           </Stack>

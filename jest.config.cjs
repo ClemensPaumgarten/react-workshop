@@ -1,7 +1,11 @@
 module.exports = {
   moduleDirectories: [
     'node_modules',
-    'utils', // a utility folder
-    '__dirname', // the root directory
+    './src/challenge/tests', // a utility folder
+    __dirname, // the root directory
   ],
+  "transform": {
+    "^.+\\.(ts|tsx|js|jsx)$": "ts-jest"
+  },
+  "testEnvironment": "jsdom"
 };
