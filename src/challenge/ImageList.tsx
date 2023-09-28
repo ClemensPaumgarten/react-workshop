@@ -4,11 +4,10 @@ import { ImageCard } from './ImageCard.tsx';
 import { useImageContext } from './ImageProvider.tsx';
 import { Image } from './image.ts';
 
-export const ImageList: FunctionComponent = () => {
-  const {
-    state: { images },
-    dispatch,
-  } = useImageContext();
+export const ImageList: FunctionComponent<{ images: Image[] }> = ({
+  images,
+}) => {
+  const { dispatch } = useImageContext();
 
   const onLikeClick = useCallback(
     (image: Image) => {
