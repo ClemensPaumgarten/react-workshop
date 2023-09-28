@@ -15,23 +15,23 @@ import { useImageContext } from './ImageProvider.tsx';
 
 type ImageCardProps = {
   image: Image;
+  onLikeClick: (image: Image) => void;
+  onDetailsClick: (image: Image) => void;
 };
 
-export const ImageCard: FunctionComponent<ImageCardProps> = ({ image }) => {
+export const ImageCard: FunctionComponent<ImageCardProps> = ({
+  image,
+  onDetailsClick,
+  onLikeClick,
+}) => {
   const { dispatch } = useImageContext();
 
-  const onLikeClick = useCallback(() => {
-    dispatch({
-      type: image.liked ? 'unsetLike' : 'setLike',
-      payload: image,
-    });
+  const onLikeButtonClick = useCallback(() => {
+    onLikeClick(image);
   }, [image, dispatch]);
 
-  const onDetailsClick = useCallback(() => {
-    dispatch({
-      type: 'setDetail',
-      payload: image,
-    });
+  const onDetailsButtonClick = useCallback(() => {
+    onDetailsClick(image);
   }, [image, dispatch]);
 
   return (
@@ -44,11 +44,11 @@ export const ImageCard: FunctionComponent<ImageCardProps> = ({ image }) => {
       </CardContent>
       <CardActions disableSpacing>
         <Stack direction="row" spacing={2}>
-          <IconButton onClick={onLikeClick} aria-label="add to favorites">
+          <IconButton onClick={onLikeButtonClick} aria-label="add to favorites">
             <FavoriteIcon color={image.liked ? 'error' : 'inherit'} />
           </IconButton>
 
-          <Button onClick={onDetailsClick}>Details</Button>
+          <Button onClick={onDetailsButtonClick}>Details</Button>
         </Stack>
       </CardActions>
     </Card>
