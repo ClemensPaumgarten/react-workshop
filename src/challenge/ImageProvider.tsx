@@ -35,14 +35,8 @@ type Action =
       payload: Image;
     }
   | {
-      type: 'unsetLike';
-      payload: Image;
-    }
-  | {
-      type: 'showLikes';
-    }
-  | {
-      type: 'hideLikes';
+      type: 'setShowLikes';
+      payload: boolean;
     };
 
 export const reducer = (state: ImageState, action: Action): ImageState => {
@@ -67,7 +61,7 @@ export const reducer = (state: ImageState, action: Action): ImageState => {
 
         currentImages[index] = {
           ...image,
-          liked: true,
+          liked: image.liked,
         };
 
         return {
@@ -79,37 +73,12 @@ export const reducer = (state: ImageState, action: Action): ImageState => {
       return copyState;
     }
 
-    case 'unsetLike': {
-      const copyState = { ...state };
-      const image = { ...action.payload };
-      const index = copyState.images.findIndex(i => i.id === image.id);
-
-      if (index > -1) {
-        const currentImages = [...copyState.images];
-
-        currentImages[index] = {
-          ...image,
-          liked: false,
-        };
-
-        return {
-          ...state,
-          images: currentImages,
-        };
-      }
-
-      return copyState;
-    }
-    case 'showLikes':
+    case 'setShowLikes':
       return {
         ...state,
-        showLikes: true,
+        showLikes: action.payload,
       };
-    case 'hideLikes':
-      return {
-        ...state,
-        showLikes: false,
-      };
+
     default:
       return state;
   }

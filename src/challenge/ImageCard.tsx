@@ -22,8 +22,11 @@ export const ImageCard: FunctionComponent<ImageCardProps> = ({ image }) => {
 
   const onLikeClick = useCallback(() => {
     dispatch({
-      type: image.liked ? 'unsetLike' : 'setLike',
-      payload: image,
+      type: 'setLike',
+      payload: {
+        ...image,
+        liked: !image.liked,
+      },
     });
   }, [image, dispatch]);
 
