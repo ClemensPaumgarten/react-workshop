@@ -102,7 +102,7 @@ export const ImageContextProvider: FunctionComponent<
   useEffect(() => {
     dispatch({
       type: 'setImages',
-      payload: images || [],
+      payload: images,
     });
   }, [images]);
 
