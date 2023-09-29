@@ -1,10 +1,10 @@
 import '@testing-library/jest-dom';
-import { ImageCard } from './ImageCard.tsx';
-import { render, screen } from './tests/CustomRender.tsx';
+import { ImageCard } from './ImageCard';
+import { render, screen } from './tests/CustomRender';
 import { fireEvent } from '@testing-library/react';
-import { Image } from './image.ts';
-import { ImageContextProvider } from './ImageProvider.tsx';
-import { MainPage } from './MainPage.tsx';
+import { Image } from './image';
+// import { ImageContextProvider } from './ImageProvider.tsx';
+import { MainPage } from './MainPage';
 
 const mockImage: Image = {
   id: '1',
@@ -37,11 +37,7 @@ describe('ImageCard test', () => {
   });
 
   it('should open the details', async () => {
-    await render(
-      <ImageContextProvider images={[mockImage]}>
-        <MainPage />
-      </ImageContextProvider>,
-    );
+    await render(<MainPage />);
 
     const button = screen.getByText('Details');
 
